@@ -1,5 +1,5 @@
-#summary One-sentence summary of this page.
 #labels maven2,lucene,analyzer,yaya-analyzer
+#maven pom config .
 =在maven中使用 yaya-analyer=
 
 == 添加dependency==
