@@ -1,0 +1,1 @@
+本文介绍的 Zookeeper 是以 3.2.2 这个稳定版本为基础，最新的版本可以通过官网 http://hadoop.apache.org/zookeeper/来获取，Zookeeper 的安装非常简单，下面将从单机模式和集群模式两个方面介绍 Zookeeper 的安装和配置。
