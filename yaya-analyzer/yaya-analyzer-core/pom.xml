@@ -2,12 +2,12 @@
   <parent>
     <artifactId>yaya-analyzer</artifactId>
     <groupId>com.googlecode.yayaanalyzer</groupId>
-    <version>1.0</version>
+    <version>0.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.googlecode.yayaanalyzer</groupId>
   <artifactId>yaya-analyzer-core</artifactId>
-  <version>1.0</version>
+  <version>0.1-SNAPSHOT</version>
   
   <build>
 		<resources>
