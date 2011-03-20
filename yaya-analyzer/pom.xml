@@ -3,7 +3,7 @@
 	<groupId>com.googlecode.yayaanalyzer</groupId>
 	<artifactId>yaya-analyzer</artifactId>
 	<name>Yaya-Analyzer</name>
-	<version>1.0</version>
+	<version>1.1-SNAPSHOT</version>
 	<description>a Lucene Analyzer for chinese</description>
 	<packaging>pom</packaging>
 
@@ -11,9 +11,9 @@
 		<module>yaya-analyzer-core</module>
 	</modules>
 	<scm>
-		<connection>scm:svn:https://yaya-analyzer.googlecode.com/svn/tags/1.0</connection>
-		<developerConnection>scm:svn:https://yaya-analyzer.googlecode.com/svn/tags/1.0</developerConnection>
-		<url>https://code.google.com/p/yaya-analyzer/source/browse/tags/1.0</url>
+		<connection>scm:svn:https://yaya-analyzer.googlecode.com/svn/trunk/yaya-analyzer</connection>
+		<developerConnection>scm:svn:https://yaya-analyzer.googlecode.com/svn/trunk/yaya-analyzer</developerConnection>
+		<url>https://code.google.com/p/yaya-analyzer/source/browse/</url>
 	</scm>
 
 	<build>
