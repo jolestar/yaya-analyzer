@@ -17,26 +17,26 @@ package com.googlecode.yayaanalyzer.lucene;
  * limitations under the License.
  */
 
+import java.io.IOException;
 import java.io.Reader;
-import org.apache.lucene.analysis.*;
+
+import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
+import org.apache.lucene.analysis.tokenattributes.TermAttribute;
+import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 
 import com.googlecode.yayaanalyzer.dictionary.AssociateStream;
-import com.googlecode.yayaanalyzer.dictionary.WordTreeFactory;
+import com.googlecode.yayaanalyzer.dictionary.WordTree;
 
 /**
- * Title: ThesaurusAnalyzer
- * Description: Extract tokens from the Stream through a dictionary
- * Copyright:   Copyright (c) 2007
- * @author Jolestar
+ * Description: Extract tokens from the text stream
+ * 
+ * @author jolestar@gmail.com
  * @version 1.0
- *
+ * 
  */
 
 public final class YayaTokenizer extends Tokenizer {
-
-	public YayaTokenizer(Reader in) {
-		input = in;
-	}
 
 	private int offset = 0, bufferIndex = 0, dataLen = 0;
 
@@ -45,7 +45,7 @@ public final class YayaTokenizer extends Tokenizer {
 	private final static int IO_BUFFER_SIZE = 10240;
 
 	/*
-	 *将前一次io读取结果的最后 MAX_WORD_LEN 个字备份，以备回溯。
+	 * 将前一次io读取结果的最后 MAX_WORD_LEN 个字备份，以备回溯。
 	 */
 	private final char[] backBuffer = new char[MAX_WORD_LEN];
 
@@ -57,42 +57,60 @@ public final class YayaTokenizer extends Tokenizer {
 
 	private int start;
 
+	private TermAttribute termAtt;
+	private OffsetAttribute offsetAtt;
+	private TypeAttribute typeAtt;
+	private WordTree tree;
+
+	public YayaTokenizer(WordTree tree, Reader in) {
+		super(in);
+		this.tree = tree;
+		init();
+	}
+
+	private void init() {
+		termAtt = addAttribute(TermAttribute.class);
+		offsetAtt = addAttribute(OffsetAttribute.class);
+		typeAtt = addAttribute(TypeAttribute.class);
+	}
+
 	private final void push(char c) {
 
 		if (length == 0)
-			start = offset - 1; 
-		buffer[length++] = Character.toLowerCase(c); 
+			start = offset - 1;
+		buffer[length++] = Character.toLowerCase(c);
 
 	}
 
-	private final Token flush() {
-
+	private final boolean flush() {
 		if (length > 0) {
-			Token token = new Token(new String(buffer, 0, length), start, start
-					+ length);
-			return token;
-		} else
-			return null;
+			termAtt.setTermBuffer(buffer, 0, length);
+			offsetAtt.setOffset(correctOffset(start), correctOffset(start
+					+ length));
+			// typeAtt.setType(TOKEN_TYPE_NAMES[tokenType]);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
-	public final Token next() throws java.io.IOException {
+	@Override
+	public boolean incrementToken() throws IOException {
+		clearAttributes();
 		length = 0;
 		start = offset;
-		
-		//创建联想流.模仿输入法的联想词语的功能
-		AssociateStream assoStream = new AssociateStream(WordTreeFactory.getInstance());
-		while (true) {
 
+		// 创建联想流.模仿输入法的联想词语的功能
+		AssociateStream assoStream = new AssociateStream(this.tree);
+		while (true) {
 			final char c;
 			offset++;
-
 			if (bufferIndex >= dataLen) {
 				System.arraycopy(ioBuffer, IO_BUFFER_SIZE - MAX_WORD_LEN,
 						backBuffer, 0, MAX_WORD_LEN);
 				dataLen = input.read(ioBuffer);
 				bufferIndex = 0;
 			}
-			;
 
 			if (dataLen == -1)
 				return flush();
@@ -188,7 +206,6 @@ public final class YayaTokenizer extends Tokenizer {
 			}
 
 		}
-
 	}
 
 }

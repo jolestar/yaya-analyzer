@@ -16,11 +16,12 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.analysis.cn.ChineseAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.util.Version;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @author jolestar
+ * @author jolestar@gmail.com
  *
  */
 public class JUnitTest {
@@ -38,8 +39,8 @@ public class JUnitTest {
     public void before() {
         text = ChineseDemo.readText(getClass().getResourceAsStream("/test.txt"));
         analyzers.add(new YayaAnalyzer());
-        analyzers.add(new CJKAnalyzer());
-        analyzers.add(new StandardAnalyzer());
+        analyzers.add(new CJKAnalyzer(Version.LUCENE_30));
+        analyzers.add(new StandardAnalyzer(Version.LUCENE_30));
         analyzers.add(new ChineseAnalyzer());
     }
 
@@ -53,12 +54,12 @@ public class JUnitTest {
     public void out(Analyzer analyzer) throws IOException {
         System.out.println(analyzer.getClass().getSimpleName());
 
-        Token[] tokens = AnalyzerUtils.tokensFromAnalysis(
+        String[] tokens = AnalyzerUtils.tokensFromAnalysis(
                 analyzer, text);
         StringBuffer buffer = new StringBuffer();
         for (int i = 0; i < tokens.length; i++) {
             buffer.append("[");
-            buffer.append(tokens[i].term());
+            buffer.append(tokens[i]);
             buffer.append("] ");
         }
         System.out.println(buffer.toString());

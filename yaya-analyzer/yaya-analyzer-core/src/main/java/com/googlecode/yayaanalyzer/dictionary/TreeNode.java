@@ -1,4 +1,5 @@
 package com.googlecode.yayaanalyzer.dictionary;
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -20,13 +21,11 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * Title: TreeNode
- * Description:
- *   TreeNode for WordTree
- * Copyright:   Copyright (c) 2007
- * @author Jolestar
+ * Description: TreeNode for WordTree Copyright: Copyright (c) 2007
+ * 
+ * @author jolestar@gmail.com
  * @version 1.0
- *
+ * 
  */
 public class TreeNode implements Serializable {
 	/**
@@ -133,21 +132,20 @@ public class TreeNode implements Serializable {
 		this.children.clear();
 	}
 
+	/**
+	 * @return
+	 */
 	public String getWord() {
-		String word = "";
+		if (!this.isWordEnd) {
+			return null;
+		}
+		StringBuilder word = new StringBuilder();
 		TreeNode tempNode = this;
-		if (this.isWordEnd) {
-			while (tempNode.parent != null) {
-
-				word = tempNode.toString() + word;
-
-				tempNode = tempNode.parent;
-			}
-		} else
-			word = null;
-
-		return word;
-
+		while (tempNode.parent != null) {
+			word.insert(0, tempNode.chineseChar);
+			tempNode = tempNode.parent;
+		}
+		return word.toString();
 	}
 
 	public int count() {
@@ -161,11 +159,6 @@ public class TreeNode implements Serializable {
 		return children;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null)
@@ -180,26 +173,14 @@ public class TreeNode implements Serializable {
 			if (another.chineseChar == this.chineseChar)
 				return true;
 		}
-
 		return false;
-		// return super.equals(obj);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		return this.chineseChar;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return Character.toString(this.chineseChar);

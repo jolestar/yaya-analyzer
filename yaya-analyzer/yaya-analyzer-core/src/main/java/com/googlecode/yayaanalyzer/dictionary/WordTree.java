@@ -25,10 +25,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Title: WordTree Description: WordTree for Associate Copyright: Copyright (c)
- * 2007
- * 
- * @author Jolestar
+ * 单词树
+ * @author jolestar@gmail.com
  * @version 1.0
  * 
  */
@@ -107,10 +105,9 @@ public class WordTree implements Serializable {
 	}
 
 	public void printTree(Writer out) throws IOException {
-		String indent = "";
 		out.write(this.root.toString());
 		out.write(System.getProperty("line.separator"));
-		printChildren(out, this.root, indent);
+		printChildren(out, this.root, "");
 	}
 
 	private void printChildren(Writer out, TreeNode parent, String indent)
