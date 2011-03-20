@@ -21,24 +21,31 @@ import java.io.Reader;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 
+import com.googlecode.yayaanalyzer.dictionary.WordTree;
+import com.googlecode.yayaanalyzer.dictionary.WordTreeFactory;
+
 /**
- * Title: ThesaurusAnalyzer
+ * Title: YayaAnalyzer
  * Description:
  *   Subclass of org.apache.lucene.analysis.Analyzer
- *   Results depends on your dictionary.
- * Copyright:   Copyright (c) 2007
- * @author Jolestar
+ * @author jolestar@gmail.com
  * @version 1.0
  *
  */
 
 public class YayaAnalyzer extends Analyzer {
 
+	private WordTree tree;
     public YayaAnalyzer() {
+    	this(WordTreeFactory.getDefaultInstance());
+    }
+    
+    public YayaAnalyzer(WordTree tree) {
+    	this.tree = tree;
     }
 
     public final TokenStream tokenStream(String fieldName, Reader reader) {
-    	 TokenStream result = new YayaTokenizer(reader);
+    	 TokenStream result = new YayaTokenizer(tree,reader);
          return result;
     }
 }

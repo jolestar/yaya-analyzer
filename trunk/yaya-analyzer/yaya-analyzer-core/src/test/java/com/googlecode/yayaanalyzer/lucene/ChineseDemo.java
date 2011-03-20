@@ -12,6 +12,7 @@ import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.analysis.cn.*;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.util.AnalyzerUtils;
+import org.apache.lucene.util.Version;
 
 import com.googlecode.yayaanalyzer.lucene.YayaAnalyzer;
 
@@ -21,7 +22,7 @@ import com.googlecode.yayaanalyzer.lucene.YayaAnalyzer;
 public class ChineseDemo {
 
 	private static Analyzer[] analyzers = { new YayaAnalyzer(),
-			new StandardAnalyzer(), new ChineseAnalyzer(), new CJKAnalyzer() };
+			new StandardAnalyzer(Version.LUCENE_30), new ChineseAnalyzer(), new CJKAnalyzer(Version.LUCENE_30) };
 
 	public static void analyzerTest(String filePath) {
 		try {
@@ -60,10 +61,10 @@ public class ChineseDemo {
 	private static void analyze(String string, Analyzer analyzer)
 			throws IOException {
 		StringBuffer buffer = new StringBuffer();
-		Token[] tokens = AnalyzerUtils.tokensFromAnalysis(analyzer, string);
+		String[] tokens = AnalyzerUtils.tokensFromAnalysis(analyzer, string);
 		for (int i = 0; i < tokens.length; i++) {
 			buffer.append("[");
-			buffer.append(tokens[i].term());
+			buffer.append(tokens[i]);
 			buffer.append("] ");
 		}
 		String name = analyzer.getClass().getName();

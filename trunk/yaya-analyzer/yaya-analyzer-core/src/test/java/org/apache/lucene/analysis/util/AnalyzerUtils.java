@@ -7,36 +7,41 @@ import java.io.*;
 import java.util.ArrayList;
 
 import org.apache.lucene.analysis.*;
+import org.apache.lucene.analysis.tokenattributes.TermAttribute;
+import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 
 /**
- * @author Jolestar
+ * @author jolestar@gmail.com
  */
 public class AnalyzerUtils
 {
-	public static Token[] tokensFromAnalysis(Analyzer analyzer, String text)
+	public static String[] tokensFromAnalysis(Analyzer analyzer, String text)
 			throws IOException
 	{
 		TokenStream stream = analyzer.tokenStream("contents", new StringReader(
 				text));
-		ArrayList tokenList = new ArrayList();
+		ArrayList<String> tokenList = new ArrayList<String>();
+		TermAttribute term = stream.getAttribute(TermAttribute.class);
+//		TypeAttribute type = (TypeAttribute)stream.getAttribute(TypeAttribute.class);
 		while (true)
 		{
-			Token token = stream.next();
-			if (token == null)
+			if(stream.incrementToken()){
+				tokenList.add(term.term());
+			}else{
 				break;
-			tokenList.add(token);
+			}
 		}
-		return (Token[]) tokenList.toArray(new Token[0]);
+		return tokenList.toArray(new String[0]);
 	}
 
 	public static void displayTokens(Analyzer analyzer, String text)
 			throws IOException
 	{
-		Token[] tokens = tokensFromAnalysis(analyzer, text);
+		String[] tokens = tokensFromAnalysis(analyzer, text);
 		for (int i = 0; i < tokens.length; i++)
 		{
-			Token token = tokens[i];
-			System.out.print("[" + token.termText() + "] ");
+			String token = tokens[i];
+			System.out.print("[" + token + "] ");
 		}
 	}
 }
