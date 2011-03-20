@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>com.googlecode.yayaanalyzer</groupId>
+  <artifactId>yaya-analyzer-core</artifactId>
+  <version>1.1-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <timestamp>20110320.091828</timestamp>
+      <buildNumber>1</buildNumber>
+    </snapshot>
+    <lastUpdated>20110320091828</lastUpdated>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>1.1-20110320.091828-1</value>
+        <updated>20110320091828</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>1.1-20110320.091828-1</value>
+        <updated>20110320091828</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+</metadata>
