@@ -2,11 +2,10 @@
 <metadata>
   <groupId>com.googlecode.yayaanalyzer</groupId>
   <artifactId>yaya-analyzer-core</artifactId>
-  <version>0.1-SNAPSHOT</version>
   <versioning>
     <versions>
       <version>0.1-SNAPSHOT</version>
     </versions>
-    <lastUpdated>20100517112544</lastUpdated>
+    <lastUpdated>20110320064623</lastUpdated>
   </versioning>
 </metadata>
