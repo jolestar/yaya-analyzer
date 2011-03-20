@@ -56,11 +56,41 @@ public final class YayaTokenizer extends Tokenizer {
 	private int length;
 
 	private int start;
+	
+
+	
+	/**
+	 * 词库中没有的词汇 
+	 */
+	static final int TOKEN_TYPE_UNKNOW = 0;
+	
+	/**
+	 * 词库中的词汇
+	 */
+	static final int TOKEN_TYPE_WORD = 1;
+	
+	/**
+	 * 单字词
+	 */
+	static final int TOKEN_TYPE_SINGLE = 2;
+	
+	/**
+	 * 数字
+	 */
+	static final int TOKEN_TYPE_DIGIT = 3;
+	
+	/**
+	 * 字母
+	 */
+	static final int TOKEN_TYPE_LETTER = 4;
+	
+	static final String[] TOKEN_TYPE_NAMES = { "unknow", "word", "single", "digit","letter"};
 
 	private TermAttribute termAtt;
 	private OffsetAttribute offsetAtt;
 	private TypeAttribute typeAtt;
 	private WordTree tree;
+	private int tokenType = TOKEN_TYPE_UNKNOW;
 
 	public YayaTokenizer(WordTree tree, Reader in) {
 		super(in);
@@ -75,7 +105,6 @@ public final class YayaTokenizer extends Tokenizer {
 	}
 
 	private final void push(char c) {
-
 		if (length == 0)
 			start = offset - 1;
 		buffer[length++] = Character.toLowerCase(c);
@@ -87,7 +116,10 @@ public final class YayaTokenizer extends Tokenizer {
 			termAtt.setTermBuffer(buffer, 0, length);
 			offsetAtt.setOffset(correctOffset(start), correctOffset(start
 					+ length));
-			// typeAtt.setType(TOKEN_TYPE_NAMES[tokenType]);
+			if(tokenType == TOKEN_TYPE_UNKNOW && length == 1){
+				tokenType = TOKEN_TYPE_SINGLE;
+			}
+			typeAtt.setType(TOKEN_TYPE_NAMES[tokenType]);
 			return true;
 		} else {
 			return false;
@@ -112,9 +144,12 @@ public final class YayaTokenizer extends Tokenizer {
 				bufferIndex = 0;
 			}
 
-			if (dataLen == -1)
+			if (dataLen == -1){
+				if(!assoStream.isBegin()&&assoStream.isWordEnd()){
+					tokenType = TOKEN_TYPE_WORD;
+				}
 				return flush();
-			else {
+			}else {
 				if (bufferIndex < 0) {
 					c = backBuffer[backBuffer.length + bufferIndex];
 				} else
@@ -124,61 +159,72 @@ public final class YayaTokenizer extends Tokenizer {
 
 			if (Character.isWhitespace(c)) {
 				if (!assoStream.isBegin()) {
+					if(assoStream.isWordEnd()){
+						tokenType = TOKEN_TYPE_WORD;
+					}
 					assoStream.reset();
-					return flush();
 				}
 				if (length > 0)
 					return flush();
 			} else if (Character.isDigit(c)) {
 				if (!assoStream.isBegin()) {
+					if(assoStream.isWordEnd()){
+						tokenType = TOKEN_TYPE_WORD;
+					}
 					bufferIndex--;
 					offset--;
 					assoStream.reset();
 					return flush();
 				}
+				tokenType = TOKEN_TYPE_DIGIT;
 				push(c);
 				if (length == MAX_WORD_LEN)
 					return flush();
 
 			} else if (Character.isLowerCase(c) || Character.isUpperCase(c)) {
 				if (!assoStream.isBegin()) {
+					if(assoStream.isWordEnd()){
+						tokenType = TOKEN_TYPE_WORD;
+					}
 					bufferIndex--;
 					offset--;
 					assoStream.reset();
 					return flush();
 				}
+				tokenType = TOKEN_TYPE_LETTER;
 				push(c);
 				if (length == MAX_WORD_LEN)
 					return flush();
 
 			} else if (Character.UnicodeBlock.of(c) == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS) {
-
 				if (assoStream.isBegin() && length > 0) {
 					bufferIndex--;
 					offset--;
 					return flush();
 				}
 
+				tokenType = TOKEN_TYPE_UNKNOW;
 				if (assoStream.associate(c)) {
 					push(c);
 					if (!assoStream.canContinue()) {
 						assoStream.reset();
+						tokenType = TOKEN_TYPE_WORD;
 						return flush();
 					}
 				} else {
 					if (assoStream.isWordEnd()) {
+						tokenType = TOKEN_TYPE_WORD;
 						assoStream.reset();
 						bufferIndex--;
 						offset--;
 						return flush();
 					} else if (assoStream.isOccurWord()) {
+						tokenType = TOKEN_TYPE_WORD;
 						assoStream.backToLastWordEnd();
 						bufferIndex = bufferIndex
 								- (length - assoStream.getSetp()) - 1;
 						offset = offset - (length - assoStream.getSetp()) - 1;
-
 						length = assoStream.getSetp();
-
 						assoStream.reset();
 						return flush();
 					} else {
@@ -198,11 +244,16 @@ public final class YayaTokenizer extends Tokenizer {
 						return flush();
 					}
 				}
-			}
-
-			else {
-				if (length > 0)
+			}else {
+				if (length > 0){
+					if(!assoStream.isBegin()){
+						if (assoStream.isWordEnd()) {
+							tokenType = TOKEN_TYPE_WORD;
+							assoStream.reset();
+						}
+					}
 					return flush();
+				}
 			}
 
 		}
