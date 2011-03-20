@@ -12,8 +12,8 @@
 		<module>yaya-analyzer-core</module>
 	</modules>
 	<scm>
-		<connection>scm:svn:https://anonymous@yaya-analyzer.googlecode.com/svn/trunk/yaya-analyzer</connection>
-		<developerConnection>scm:svn:https://jolestar@yaya-analyzer.googlecode.com/svn/trunk/yaya-analyzer</developerConnection>
+		<connection>scm:svn:https://yaya-analyzer.googlecode.com/svn/trunk/yaya-analyzer</connection>
+		<developerConnection>scm:svn:https://yaya-analyzer.googlecode.com/svn/trunk/yaya-analyzer</developerConnection>
 		<url>https://code.google.com/p/yaya-analyzer/source/browse/</url>
 	</scm>
 
