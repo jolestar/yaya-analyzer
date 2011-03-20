@@ -1,0 +1,33 @@
+#summary 如何使用
+#labels usage
+
+= Introduction =
+
+简单的代码演示如何使用yaya-analyzer
+
+
+= Details =
+
+使用默认词库:
+{{{
+Analyzer analyzer = new YayaAnalyzer();
+TokenStream stream = analyzer.tokenStream("contents", new StringReader(
+				text));
+TermAttribute term = stream.getAttribute(TermAttribute.class);
+
+while (stream.incrementToken()) {
+    System.out.println(term.term());
+}
+}}}
+
+使用自定义词库:
+{{{
+Analyzer analyzer = new YayaAnalyzer(WordTreeFactory.createInstance(new File("词库文件路径")));
+TokenStream stream = analyzer.tokenStream("contents", new StringReader(
+				text));
+TermAttribute term = stream.getAttribute(TermAttribute.class);
+
+while (stream.incrementToken()) {
+    System.out.println(term.term());
+}
+}}}
