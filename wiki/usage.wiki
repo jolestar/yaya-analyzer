@@ -1,12 +1,14 @@
-#summary 如何使用
+#summary 如何使用 yaya-analyzer
 #labels usage
 
-= Introduction =
+= 依赖库 =
 
-简单的代码演示如何使用yaya-analyzer
+ # org.apache.lucene.lucene-core.3.0.3.jar
+ # org.apache.lucene.lucene-analyzers.3.0.3.jar
+ # junit.junit.4.5.jar
 
 
-= Details =
+= 代码演示 =
 
 使用默认词库:
 {{{
