@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.googlecode.yayaanalyzer.dictionary;
+package com.grouk.yayaanalyzer.dictionary;
 
 /**
  * @author jolestar@gmail.com

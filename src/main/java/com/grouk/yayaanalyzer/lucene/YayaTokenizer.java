@@ -1,4 +1,4 @@
-package com.googlecode.yayaanalyzer.lucene;
+package com.grouk.yayaanalyzer.lucene;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -17,16 +17,14 @@ package com.googlecode.yayaanalyzer.lucene;
  * limitations under the License.
  */
 
-import java.io.IOException;
-import java.io.Reader;
-
+import com.grouk.yayaanalyzer.dictionary.AssociateStream;
+import com.grouk.yayaanalyzer.dictionary.WordTree;
 import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
-import org.apache.lucene.analysis.tokenattributes.TermAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 
-import com.googlecode.yayaanalyzer.dictionary.AssociateStream;
-import com.googlecode.yayaanalyzer.dictionary.WordTree;
+import java.io.IOException;
 
 /**
  * Description: Extract tokens from the text stream
@@ -86,20 +84,19 @@ public final class YayaTokenizer extends Tokenizer {
 	
 	static final String[] TOKEN_TYPE_NAMES = { "unknow", "word", "single", "digit","letter"};
 
-	private TermAttribute termAtt;
+	private CharTermAttribute termAtt;
 	private OffsetAttribute offsetAtt;
 	private TypeAttribute typeAtt;
 	private WordTree tree;
 	private int tokenType = TOKEN_TYPE_UNKNOW;
 
-	public YayaTokenizer(WordTree tree, Reader in) {
-		super(in);
+	public YayaTokenizer(WordTree tree) {
 		this.tree = tree;
 		init();
 	}
 
 	private void init() {
-		termAtt = addAttribute(TermAttribute.class);
+		termAtt = addAttribute(CharTermAttribute.class);
 		offsetAtt = addAttribute(OffsetAttribute.class);
 		typeAtt = addAttribute(TypeAttribute.class);
 	}
@@ -113,7 +110,7 @@ public final class YayaTokenizer extends Tokenizer {
 
 	private final boolean flush() {
 		if (length > 0) {
-			termAtt.setTermBuffer(buffer, 0, length);
+			termAtt.copyBuffer(buffer, 0, length);
 			offsetAtt.setOffset(correctOffset(start), correctOffset(start
 					+ length));
 			if(tokenType == TOKEN_TYPE_UNKNOW && length == 1){
@@ -259,4 +256,8 @@ public final class YayaTokenizer extends Tokenizer {
 		}
 	}
 
+	@Override
+	public void reset() throws IOException {
+		super.reset();
+	}
 }

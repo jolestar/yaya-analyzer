@@ -3,12 +3,13 @@
  */
 package org.apache.lucene.analysis.util;
 
-import java.io.*;
-import java.util.ArrayList;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
-import org.apache.lucene.analysis.*;
-import org.apache.lucene.analysis.tokenattributes.TermAttribute;
-import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
 
 /**
  * @author jolestar@gmail.com
@@ -19,11 +20,11 @@ public class AnalyzerUtils {
 		TokenStream stream = analyzer.tokenStream("contents", new StringReader(
 				text));
 		ArrayList<String> tokenList = new ArrayList<String>();
-		TermAttribute term = stream.getAttribute(TermAttribute.class);
+		CharTermAttribute term = stream.getAttribute(CharTermAttribute.class);
 		// TypeAttribute type =
 		// (TypeAttribute)stream.getAttribute(TypeAttribute.class);
 		while (stream.incrementToken()) {
-			tokenList.add(term.term());
+			tokenList.add(term.toString());
 		}
 		return tokenList.toArray(new String[0]);
 	}

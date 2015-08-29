@@ -1,23 +1,21 @@
 /**
  * 
  */
-package com.googlecode.yayaanalyzer.lucene;
+package com.grouk.yayaanalyzer.lucene;
+
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.cjk.CJKAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.cjk.CJKAnalyzer;
-import org.apache.lucene.analysis.cn.ChineseAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.analysis.tokenattributes.TermAttribute;
-import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
-import org.apache.lucene.util.Version;
-import org.junit.Before;
-import org.junit.Test;
 
 /**
  * @author jolestar@gmail.com
@@ -43,9 +41,9 @@ public class JUnitTest {
 					"/" + filenames[i]));
 		}
 		analyzers.add(new YayaAnalyzer());
-		analyzers.add(new CJKAnalyzer(Version.LUCENE_30));
-		analyzers.add(new StandardAnalyzer(Version.LUCENE_30));
-		analyzers.add(new ChineseAnalyzer());
+		analyzers.add(new CJKAnalyzer());
+		analyzers.add(new StandardAnalyzer());
+		//analyzers.add(new ChineseAnalyzer());
 	}
 
 	@Test
@@ -62,17 +60,16 @@ public class JUnitTest {
 
 		TokenStream stream = analyzer.tokenStream("contents", new StringReader(
 				text));
-
+		stream.reset();
 		while (stream.incrementToken()) {
-			TermAttribute term = stream.getAttribute(TermAttribute.class);
+			CharTermAttribute term = stream.getAttribute(CharTermAttribute.class);
 			TypeAttribute type = null;
 			if (stream.hasAttribute(TypeAttribute.class)) {
 				type = (TypeAttribute) stream.getAttribute(TypeAttribute.class);
 			}
-			System.out.println("[" + term.term()
+			System.out.println("[" + term.toString()
 					+ (type == null ? "" : "/" + type.type()) + "]");
 		}
-		System.out.println();
-
+		stream.close();
 	}
 }

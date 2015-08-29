@@ -1,4 +1,4 @@
-package com.googlecode.yayaanalyzer.lucene;
+package com.grouk.yayaanalyzer.lucene;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -17,12 +17,10 @@ package com.googlecode.yayaanalyzer.lucene;
  * limitations under the License.
  */
 
-import java.io.Reader;
+import com.grouk.yayaanalyzer.dictionary.WordTree;
+import com.grouk.yayaanalyzer.dictionary.WordTreeFactory;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.TokenStream;
-
-import com.googlecode.yayaanalyzer.dictionary.WordTree;
-import com.googlecode.yayaanalyzer.dictionary.WordTreeFactory;
+import org.apache.lucene.analysis.Tokenizer;
 
 /**
  * Title: YayaAnalyzer
@@ -39,13 +37,19 @@ public class YayaAnalyzer extends Analyzer {
     public YayaAnalyzer() {
     	this(WordTreeFactory.getDefaultInstance());
     }
-    
+
+    @Override
+    protected TokenStreamComponents createComponents(String fieldName) {
+        Tokenizer source = new YayaTokenizer(this.tree);
+        return new TokenStreamComponents(source);
+    }
+
     public YayaAnalyzer(WordTree tree) {
     	this.tree = tree;
     }
 
-    public final TokenStream tokenStream(String fieldName, Reader reader) {
-    	 TokenStream result = new YayaTokenizer(tree,reader);
-         return result;
-    }
+//    public final TokenStream tokenStream(String fieldName, Reader reader) {
+//    	 TokenStream result = new YayaTokenizer(tree,reader);
+//         return result;
+//    }
 }
